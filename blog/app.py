@@ -5,6 +5,7 @@ from .views.articles import articles_app
 from .views.index import index
 from .views.auth import login_manager, auth_app
 from flask_migrate import Migrate
+from ..blog.security import flask_bcrypt
 
 VIEWS = [
     index,
@@ -28,6 +29,7 @@ app = Flask(__name__)
 app.config.from_pyfile('configs.py')
 
 db.init_app(app)
+flask_bcrypt.init_app(app)
 
 migrate = Migrate(app, db, compare_type=True)
 
