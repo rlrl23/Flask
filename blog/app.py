@@ -4,6 +4,7 @@ from .views.users import users_app
 from .views.articles import articles_app
 from .views.index import index
 from .views.auth import login_manager, auth_app
+from .views.authors import authors_app
 from flask_migrate import Migrate
 from ..blog.security import flask_bcrypt
 
@@ -12,6 +13,7 @@ VIEWS = [
     users_app,
     articles_app,
     auth_app,
+    authors_app,
 ]
 
 def register_extensions(app):
