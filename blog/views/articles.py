@@ -1,19 +1,51 @@
-from flask import Blueprint, render_template
+from sqlite3 import IntegrityError
+
+from flask import Blueprint, render_template, request, current_app, redirect, url_for
+from flask_login import login_required, current_user, login_user
 from werkzeug.exceptions import NotFound
 
+from ..models import Author
+from ..models.article import Article
+from ..forms.article import CreateArticleForm
+from ..models.database import db
+
 articles_app = Blueprint("articles_app", __name__)
-ARTICLES = {1:"Flask", 2:"Django", 3:"JSON:API"}
 
 
 @articles_app.route("/articles/", endpoint='list')
 def article_list():
-    return render_template("articles/list.html", articles=ARTICLES)
+    articles=Article.query.all()
+    return render_template("articles/list.html", articles=articles)
 
 @articles_app.route("/articles/<int:article_id>/", endpoint='details')
 def article_details(article_id:int):
-    try:
-        title= ARTICLES[article_id]
-    except KeyError:
+    article=Article.query.filter_by(id=article_id).one_or_none()
+    if article is None:
         raise NotFound(f'Article #{article_id} doesn`t exist!')
 
-    return render_template("articles/details.html", article_id=article_id, title=title)
+    return render_template("articles/details.html", article=article)
+
+@articles_app.route("/articles/create", methods=['GET', 'POST'], endpoint='create')
+@login_required
+def create_article():
+    error = None
+    form = CreateArticleForm(request.form)
+
+    if request.method == "POST" and form.validate_on_submit():
+        if current_user.author:
+            author_id=current_user.id
+        else:
+            author=Author(user_id=current_user.id)
+            db.session.add(author)
+            db.session.flush()
+            author_id = author.id
+        article = Article(author_id=author_id ,title=form.title.data.strip(), body=form.body.data)
+        db.session.add(article)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            current_app.logger.exception("Could not create a new article!")
+            error = "Could not create article"
+        else:
+            return redirect(url_for("articles_app.details", article_id=article.id))
+    return render_template("articles/create.html", form=form, error=error)
