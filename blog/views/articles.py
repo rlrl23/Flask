@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, current_app, redirect, ur
 from flask_login import login_required, current_user, login_user
 from werkzeug.exceptions import NotFound
 
-from ..models import Author
+from ..models import Author, Tag
 from ..models.article import Article
 from ..forms.article import CreateArticleForm
 from ..models.database import db
@@ -30,16 +30,22 @@ def article_details(article_id:int):
 def create_article():
     error = None
     form = CreateArticleForm(request.form)
+    form.tags.choices=[(tag.id, tag.name) for tag in Tag.query.order_by('name')]
 
     if request.method == "POST" and form.validate_on_submit():
         if current_user.author:
-            author_id=current_user.id
+            author=Author.query.filter_by(user_id=current_user.id).one_or_none()
+            author_id=author.id
         else:
             author=Author(user_id=current_user.id)
             db.session.add(author)
             db.session.flush()
             author_id = author.id
-        article = Article(author_id=author_id ,title=form.title.data.strip(), body=form.body.data)
+        article = Article(author_id=author_id, title=form.title.data.strip(), body=form.body.data)
+        if form.tags.data:
+            selected_tags=Tag.query.filter(Tag.id.in_(form.tags.data))
+            for tag in selected_tags:
+                article.tags.append(tag)
         db.session.add(article)
         try:
             db.session.commit()
