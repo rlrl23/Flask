@@ -1,4 +1,6 @@
 from flask import Flask
+
+from .admin import admin
 from .models.database import db
 from .views.users import users_app
 from .views.articles import articles_app
@@ -39,6 +41,8 @@ migrate = Migrate(app, db, compare_type=True)
 register_blueprints(app)
 
 login_manager.init_app(app)
+
+admin.init_app(app)
 
 
 
