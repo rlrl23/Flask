@@ -9,7 +9,7 @@ Article #{{ article_id }}:{{ article.title }}
 <div>
     <p>{{ article.body }}</p>
     <div>Published {{ article.dt_created }}</div>
-    <div>by {{ article.author.user.username }}</div>
+    <div>by {{ article.author}}</div>
     {% if article.tags %}
     <div>Tags:</div>
     <ul>
