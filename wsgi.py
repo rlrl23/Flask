@@ -1,5 +1,5 @@
 from .blog.app import db, app
-from .blog.models import User
+from .blog.models import User, Tag, Article
 import os
 
 # @app.cli.command("init-db")
@@ -39,6 +39,21 @@ def delete_user():
     users=User.query.delete()
     db.session.commit()
     print("delete:", users)
+
+@app.cli.command("create-tags")
+def create_tags():
+    for name in ['flask','django','python','sqlalchemy','news',]:
+        tag=Tag(name=name)
+        db.session.add(tag)
+    db.session.commit()
+    print("done! created tags")
+
+@app.cli.command("delete-article")
+def delete_article():
+    article=Article.query.filter_by(id=3).delete()
+    db.session.commit()
+    print("delete:", article)
+
 
 if __name__ == "__main__":
     app.run(

@@ -23,7 +23,7 @@ Create article
 <!--    {% endfor %}-->
 <!--    {{ form.submit(class="btn btn-primary my-3") }}-->
 
-{% for field in ['title', 'body'] %}
+{% for field in ['title', 'body', 'tags'] %}
 {{ render_field(form[field]) }}
 {% endfor %}
 
