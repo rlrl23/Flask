@@ -1,5 +1,5 @@
-from .blog.app import db, app
-from .blog.models import User, Tag, Article
+from blog.app import db, app
+from blog.models import User, Tag, Article
 import os
 
 # @app.cli.command("init-db")

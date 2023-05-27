@@ -15,6 +15,8 @@ articles_app = Blueprint("articles_app", __name__)
 @articles_app.route("/articles/", endpoint='list')
 def article_list():
     articles=Article.query.all()
+    for article in articles:
+        print('article.author', article.author)
     return render_template("articles/list.html", articles=articles)
 
 @articles_app.route("/articles/<int:article_id>/", endpoint='details')

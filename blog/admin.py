@@ -3,8 +3,8 @@ from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 
-from Flask.blog import models
-from Flask.blog.models.database import db
+from ..blog import models
+from ..blog.models.database import db
 
 class MyAdminIndexView(AdminIndexView):
     @expose("/")
