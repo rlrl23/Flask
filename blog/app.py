@@ -29,24 +29,24 @@ def register_blueprints(app: Flask):
         app.register_blueprint(view)
 
 
-def create_app() -> Flask:
-    app = Flask(__name__)
-    app.config.from_pyfile('configs.py')
+# def create_app() -> Flask:
+app = Flask(__name__)
+app.config.from_pyfile('configs.py')
 
-    db.init_app(app)
-    flask_bcrypt.init_app(app)
+db.init_app(app)
+flask_bcrypt.init_app(app)
 
-    migrate = Migrate(app, db, compare_type=True)
+migrate = Migrate(app, db, compare_type=True)
 
-    #register_extensions(app)
-    register_blueprints(app)
+#register_extensions(app)
+register_blueprints(app)
 
-    login_manager.init_app(app)
+login_manager.init_app(app)
 
     # admin.init_app(app)
     # api=init_api(app)
 
-    return app
+    # return app
 
 
 
