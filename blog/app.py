@@ -10,6 +10,7 @@ from .views.authors import authors_app
 from flask_migrate import Migrate
 from blog.security import flask_bcrypt
 # from .api import init_api
+from flask_wtf.csrf import CSRFProtect, CSRFError
 
 VIEWS = [
     index,
@@ -31,10 +32,14 @@ def register_blueprints(app: Flask):
 
 # def create_app() -> Flask:
 app = Flask(__name__)
+
+csrf = CSRFProtect(app)
+
 app.config.from_pyfile('configs.py')
 
 db.init_app(app)
 flask_bcrypt.init_app(app)
+csrf.init_app(app)
 
 migrate = Migrate(app, db, compare_type=True)
 
