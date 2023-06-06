@@ -1,6 +1,6 @@
 from flask import Flask
 
-from .admin import admin
+# from .admin import admin
 from .models.database import db
 from .views.users import users_app
 from .views.articles import articles_app
@@ -8,8 +8,8 @@ from .views.index import index
 from .views.auth import login_manager, auth_app
 from .views.authors import authors_app
 from flask_migrate import Migrate
-from ..blog.security import flask_bcrypt
-from .api import init_api
+from blog.security import flask_bcrypt
+# from .api import init_api
 
 VIEWS = [
     index,
@@ -43,8 +43,8 @@ def create_app() -> Flask:
 
     login_manager.init_app(app)
 
-    admin.init_app(app)
-    api=init_api(app)
+    # admin.init_app(app)
+    # api=init_api(app)
 
     return app
 
